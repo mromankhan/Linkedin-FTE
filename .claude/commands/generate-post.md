@@ -1,34 +1,73 @@
-Generate a LinkedIn post for the Tech/AI/Software niche.
+Generate a LinkedIn text post for the Tech/AI/Software niche.
 
-## Instructions
+## FIRST: Topic Selection (Always do this first)
 
-Read the file `vault/Company_Handbook.md` to understand the posting rules, tone, niche, and hashtag strategy.
+Read `vault/Company_Handbook.md` for niche, tone, and hashtag rules.
 
-Then ask the user: **"What topic do you want to post about?"** (if not already provided in the command arguments).
+### If a topic was provided in the command arguments:
+Use it directly. Skip to "Generate the Post" section.
 
-Using the topic provided, generate a complete LinkedIn post following these rules:
+### If NO topic was provided:
+
+**Step A — Check recent posts to avoid repetition:**
+List all files in `vault/Published/` and read the `topic:` field from their frontmatter.
+Keep a mental note of these — do NOT suggest anything similar.
+
+**Step B — Generate 6 FRESH topic ideas right now.**
+Do NOT use pre-written examples. Think creatively based on:
+- Today's date and what is currently trending in Tech/AI/Software
+- The 5 content pillars from Company_Handbook.md (rotate — pick different pillars)
+- Formats that perform well on LinkedIn: list, hot take, story, how-to, trend, opinion
+- Topics NOT already covered in vault/Published/
+
+Each suggestion must be:
+- Specific and scroll-stopping (not vague like "AI is changing things")
+- A different format type from the others
+- Something a real developer or founder would genuinely want to read
+
+Show them like this (use your OWN generated topics, not examples):
+
+```
+Choose a topic for your LinkedIn post:
+
+1. [FORMAT]  "Your generated topic idea here"
+2. [FORMAT]  "Your generated topic idea here"
+3. [FORMAT]  "Your generated topic idea here"
+4. [FORMAT]  "Your generated topic idea here"
+5. [FORMAT]  "Your generated topic idea here"
+6. [FORMAT]  "Your generated topic idea here"
+
+Type a number (1-6) or write your own topic:
+```
+
+Wait for the user to reply with a number or custom topic. Then use that topic.
+
+---
+
+## Generate the Post
+
+Using the selected topic, write a complete LinkedIn post:
 
 ### Post Structure
-1. **Hook** (Line 1): A bold statement, surprising fact, or provocative question. Must grab attention in the first 2 seconds.
-2. **Body** (3–5 short paragraphs): Insightful, concrete, and conversational. Max 2–3 lines per paragraph. No fluff.
-3. **CTA** (Last paragraph): A genuine call to action — ask a question, invite opinions, or tell them to follow.
-4. **Hashtags** (5–8): Based on topic, following the strategy in Company_Handbook.md. Place at the very end.
+1. **Hook** (Line 1): Bold statement, surprising fact, or provocative question. Must stop the scroll.
+2. **Body** (3–5 paragraphs): Insightful, concrete, conversational. Max 2–3 lines per paragraph. No filler.
+3. **CTA** (Last line): Genuine question or action that sparks comments.
+4. **Hashtags** (5–8): Follow handbook strategy. At the very end.
 
-### Post Requirements
+### Requirements
 - Length: 150–300 words
-- Tone: Professional but human. Not salesy. Thought leadership voice.
-- Must feel like a real person wrote it, not a robot
-- Include a "Best time to post" recommendation (day + time)
+- Tone: Professional but human. Thought leadership, not sales pitch.
+- Must feel like a real person wrote it
+- Best time to post: recommend specific day + time
 
-### Output Format
-Save the generated post as a markdown file in `vault/Pending_Approval/` with this exact naming format:
-`POST_YYYY-MM-DD_HH-MM_<topic-slug>.md`
+### Save the File
+Save to `vault/Pending_Approval/POST_YYYY-MM-DD_HH-MM_<topic-slug>.md`
 
-The file must use this frontmatter schema:
 ```
 ---
-topic: <topic in plain English>
-hashtags: AI, Tech, SoftwareDevelopment, <2-5 more relevant tags>
+type: text
+topic: <topic>
+hashtags: AI, Tech, SoftwareDevelopment, <2-5 more>
 best_time: <e.g., Tuesday 9:00 AM>
 created: <ISO timestamp>
 status: pending_approval
@@ -36,25 +75,25 @@ status: pending_approval
 
 ## Post Content
 
-<full post text here, without hashtags>
+<full post text — no hashtags here>
 
 ## Hashtags
-<hashtags listed here, one per line with # prefix>
+<one per line, with # prefix>
 
 ## Notes
-<any notes for the human reviewer, e.g., suggested image, link to add, etc.>
+<reviewer notes: suggested edits, link to add, etc.>
 ```
 
-### After Saving
-Tell the user:
-1. Where the file was saved
-2. What the best posting time is
-3. How to approve it: "Review the post, then move the file from `vault/Pending_Approval/` to `vault/Approved/` to trigger posting."
-4. If the orchestrator is running, the post will be automatically submitted to LinkedIn once moved to Approved.
+### After Saving — Tell the User
+```
+POST SAVED
+==========
+File: vault/Pending_Approval/<filename>
+Topic: <topic>
+Best time to post: <day + time>
 
-### Example Topics (for Tech/AI niche)
-- "5 AI tools that replaced 3 hours of my daily work"
-- "Why most developers still don't understand prompting"
-- "The dirty secret about AI automation in 2026"
-- "How I built a personal AI employee in a weekend"
-- "Python vs AI coding assistants — who wins in 2026?"
+NEXT STEPS:
+1. Open the file and review the post
+2. Edit anything you want to change
+3. Move file to vault/Approved/ to post to LinkedIn
+```

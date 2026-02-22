@@ -3,11 +3,50 @@ Generate a LinkedIn carousel post (PDF slider) for the Tech/AI/Software niche.
 ## What is a LinkedIn Carousel?
 A PDF document where each page = one swipeable slide. LinkedIn renders it as an interactive slider. Carousels get 3x more reach than text posts because people swipe through them.
 
-## Instructions
+---
 
-Read `vault/Company_Handbook.md` for tone and niche guidelines.
+## FIRST: Topic Selection (Always do this first)
 
-Ask the user: **"What topic for the carousel?"** (if not already given in arguments).
+Read `vault/Company_Handbook.md` for niche, tone, and hashtag rules.
+
+### If a topic was provided in the command arguments:
+Use it directly. Skip to "Generate the Carousel" section.
+
+### If NO topic was provided:
+
+**Step A — Check recent posts to avoid repetition:**
+List all files in `vault/Published/` and read the `topic:` field from their frontmatter.
+Keep a mental note — do NOT suggest similar topics.
+
+**Step B — Generate 6 FRESH carousel topic ideas right now.**
+Do NOT use pre-written examples. Think creatively based on:
+- Today's date and what is trending in Tech/AI/Software right now
+- Carousel-friendly formats: listicle, step-by-step, comparison, mistakes, framework, roadmap
+- The 5 content pillars from Company_Handbook.md
+- Topics NOT already covered in vault/Published/
+
+Each suggestion must be carousel-friendly — meaning it naturally breaks into 5–8 slides.
+
+Show them like this (use your OWN generated topics, not examples):
+
+```
+Choose a topic for your LinkedIn CAROUSEL:
+
+1. [FORMAT]  "Your generated topic idea here"
+2. [FORMAT]  "Your generated topic idea here"
+3. [FORMAT]  "Your generated topic idea here"
+4. [FORMAT]  "Your generated topic idea here"
+5. [FORMAT]  "Your generated topic idea here"
+6. [FORMAT]  "Your generated topic idea here"
+
+Type a number (1-6) or write your own topic:
+```
+
+Wait for the user to reply with a number or custom topic. Then use that topic.
+
+---
+
+## Generate the Carousel
 
 Then do the following:
 

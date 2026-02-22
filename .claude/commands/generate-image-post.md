@@ -1,133 +1,147 @@
 Generate a LinkedIn image post with a Gemini image prompt for the Tech/AI/Software niche.
 
-## What This Does
-1. Generates the LinkedIn post caption + hashtags
-2. Generates a detailed Gemini image prompt (ready to paste into Gemini)
-3. Saves the approval file — waiting for you to add the image
+## FIRST: Topic Selection (Always do this first)
+
+Read `vault/Company_Handbook.md` for niche, tone, and hashtag rules.
+
+### If a topic was provided in the command arguments:
+Use it directly. Skip to "Generate the Post" section.
+
+### If NO topic was provided:
+
+**Step A — Check recent posts to avoid repetition:**
+List all files in `vault/Published/` and read the `topic:` field from their frontmatter.
+Keep a mental note — do NOT suggest similar topics.
+
+**Step B — Generate 6 FRESH topic ideas right now.**
+Do NOT use pre-written examples. Think creatively based on:
+- Today's date and current trends in Tech/AI/Software
+- Topics that produce a compelling, shareable image (visual metaphors work best)
+- Formats: visual stat, tool showcase, before/after, concept explainer, hot take, infographic
+- Topics NOT already covered in vault/Published/
+
+Each suggestion must be visually strong — ask yourself: "would this make a striking image?"
+
+Show them like this (use your OWN generated topics, not examples):
+
+```
+Choose a topic for your LinkedIn IMAGE post:
+
+1. [FORMAT]  "Your generated topic idea here"
+2. [FORMAT]  "Your generated topic idea here"
+3. [FORMAT]  "Your generated topic idea here"
+4. [FORMAT]  "Your generated topic idea here"
+5. [FORMAT]  "Your generated topic idea here"
+6. [FORMAT]  "Your generated topic idea here"
+
+Type a number (1-6) or write your own topic:
+```
+
+Wait for the user to reply with a number or custom topic. Then use that topic.
 
 ---
 
-## Instructions
+## Generate the Post
 
-Read `vault/Company_Handbook.md` for tone and niche guidelines.
-
-Ask the user: **"What is the topic for this image post?"** (if not already given in arguments).
-
----
-
-## Step 1 — Write the LinkedIn Caption
-
-Write a LinkedIn post caption following these rules:
-- Length: 100–200 words (shorter than text posts — image carries the weight)
-- Hook in first line (bold statement or question)
+### Step 1 — Write the Caption FIRST
+- Length: 100–200 words (image carries the visual weight)
+- Strong hook in first line
 - 2–3 short paragraphs
 - Clear CTA at end
-- 5–7 relevant hashtags
+- 5–7 hashtags
 
----
+### Step 2 — Extract the Core Visual Idea from the Caption
 
-## Step 2 — Generate the Gemini Image Prompt
+Before writing the image prompt, read what you just wrote in Step 1 and answer:
+- **What is the single most important message of this post?**
+- **What emotion or insight should someone feel when they see the image?**
+- **What visual metaphor would represent this message?**
 
-Create a **detailed, copy-paste ready image prompt** for Gemini (image generator).
+Examples of caption → visual metaphor mapping:
+| Post message | Visual metaphor |
+|---|---|
+| "AI tools save 3 hours daily" | Hourglass with digital particles flowing through it, half sand half glowing code |
+| "Junior vs Senior developer mindset" | Two paths diverging — one rocky/manual, one lit with AI glow |
+| "Debugging with AI is faster" | Magnifying glass made of light rays scanning glowing code lines |
+| "AI agents working 24/7" | City skyline at night with glowing digital workers floating above it |
+| "Clean code vs shipped code" | Two buildings — one ornate but unfinished, one simple but standing tall |
 
-The prompt must follow this structure:
+### Step 3 — Generate the Gemini Image Prompt
+
+Using the visual metaphor you identified in Step 2, write a **detailed, copy-paste ready** prompt that is **directly tied to what the caption says**:
 
 ```
 GEMINI IMAGE PROMPT:
 ─────────────────────────────────────────────
-[Describe the main visual scene in detail]
+[Describe the visual metaphor scene in detail — make it specific to THIS post's message]
+[What object/scene represents the core idea? What is happening in the image?]
+[What should the viewer feel/understand just by looking at it?]
 
-Style: [e.g., "Photorealistic", "3D render", "Flat design illustration", "Dark tech aesthetic"]
-Mood: [e.g., "Professional", "Futuristic", "Minimalist", "Bold and dynamic"]
-Colors: [e.g., "Dark navy blue background, indigo and white accents, soft glow effects"]
-Composition: [e.g., "Wide landscape 16:9", "Square 1:1 for LinkedIn", centered subject]
-Text overlay: [NONE — LinkedIn caption handles the text]
-Lighting: [e.g., "Cinematic lighting", "Soft studio light", "Neon glow"]
-Details to include: [specific elements]
-Details to AVOID: [e.g., "No text", "No watermarks", "No people's faces"]
-Quality: Ultra high resolution, sharp details, LinkedIn-optimized
+Style: [choose one that fits the post mood: "3D render" / "Cinematic photo" / "Flat illustration" / "Dark digital art"]
+Mood: [match the post tone: "Empowering" / "Urgent" / "Calm and focused" / "Futuristic" / "Serious"]
+Colors: [tied to topic emotion — e.g., "Deep navy background, electric indigo for AI elements, warm amber for human elements"]
+Composition: Square 1:1 ratio, 1200x1200px, centered subject, subtle depth blur at edges
+Text overlay: NONE — the LinkedIn caption handles all text
+Lighting: [match mood: "Dramatic cinematic rim light" / "Soft morning glow" / "Neon volumetric glow"]
+Key visual elements: [3-5 specific things that make this image unique to THIS post topic]
+Details to AVOID: No generic stock imagery, no text, no watermarks, no logos, no handshakes
+Quality: Ultra high resolution, sharp center focus, optimized for LinkedIn feed thumbnail
 ─────────────────────────────────────────────
 ```
 
-### Image prompt guidelines for Tech/AI niche:
-- Abstract tech visuals work great: circuits, glowing nodes, data streams, AI brain visualizations
-- Avoid stock-photo clichés (handshakes, generic office people)
-- Dark backgrounds with glowing accents perform well on LinkedIn
-- Include a "visual metaphor" that connects to the post topic
-- Size: always mention "square 1:1 ratio, 1200x1200px" for LinkedIn
+**Rules for a great, post-relevant image prompt:**
+- The image must make sense WITH the caption — like a book cover matches the story inside
+- If someone sees the image alone, they should guess roughly what the post is about
+- Never use generic tech imagery (random circuit boards, keyboard close-ups) unless directly relevant
+- The visual metaphor should be the central element, not a background decoration
 
-### Example image prompts by topic:
-- AI tools → "Futuristic robot hand typing on a holographic keyboard, dark navy background, glowing blue light trails, 3D render, cinematic lighting, square 1:1 ratio"
-- Productivity → "Clean minimal desk with a glowing laptop showing abstract code, soft morning light, top-down view, muted warm tones, photorealistic, 1:1 ratio"
-- Software development → "Abstract network of glowing nodes and connections representing code architecture, deep space background, purple and blue neon, 3D visualization, 1:1 ratio"
-
----
-
-## Step 3 — Determine the Image Filename
-
-Based on the topic, suggest a clear filename the user should save their image as:
+### Step 3 — Suggest the Image Filename
 ```
-suggested_filename: IMAGE_<topic-slug>_<YYYY-MM-DD>.png
-example: IMAGE_ai-tools-productivity_2026-02-22.png
+vault/Images/IMAGE_<topic-slug>_<YYYY-MM-DD>.png
 ```
 
-The image should be saved at:
+### Step 4 — Save the Approval File
+Save to `vault/Pending_Approval/POST_YYYY-MM-DD_HH-MM_<topic-slug>.md`
+
 ```
-vault/Images/<suggested_filename>
-```
-
----
-
-## Step 4 — Save the Approval File
-
-Save a markdown file at `vault/Pending_Approval/POST_<YYYY-MM-DD>_<HH-MM>_<topic-slug>.md`:
-
-```markdown
 ---
 type: image
-topic: <topic in plain English>
-image_path: vault/Images/<suggested_filename>
+topic: <topic>
+image_path: vault/Images/IMAGE_<topic-slug>_<YYYY-MM-DD>.png
 hashtags: AI, Tech, SoftwareDevelopment, <2-4 more>
-best_time: <recommend best day + time e.g. "Tuesday 9:00 AM">
+best_time: <e.g., Thursday 9:00 AM>
 created: <ISO timestamp>
 status: waiting_for_image
 ---
 
 ## Post Content
 
-<full caption here, without hashtags>
+<caption text — no hashtags>
 
 ## Hashtags
-<each hashtag on its own line with # prefix>
+<one per line with # prefix>
 
 ## Image Instructions
-**Save your generated image here:**
-`vault/Images/<suggested_filename>`
+Save your generated image to: `vault/Images/IMAGE_<topic-slug>_<YYYY-MM-DD>.png`
 
 **Gemini Prompt (copy this):**
----
-<paste the full gemini prompt here>
----
+<full prompt here>
 
 ## How to Approve
-1. Generate image using the Gemini prompt above
-2. Save it to: vault/Images/<suggested_filename>
-3. Move THIS .md file to vault/Approved/
-4. The system will post the image + caption to LinkedIn automatically
+1. Paste the Gemini prompt into https://gemini.google.com (or Midjourney / DALL-E / Ideogram)
+2. Download the image
+3. Save to: vault/Images/IMAGE_<topic-slug>_<YYYY-MM-DD>.png
+4. Move THIS .md file to vault/Approved/
+5. LinkedIn post fires automatically!
 ```
 
----
-
-## Step 5 — Tell the User Everything
-
-Show a clear summary:
-
+### Step 5 — Tell the User
 ```
-POST READY FOR IMAGE GENERATION
-================================
+IMAGE POST READY
+================
 Topic: <topic>
-Caption: <first line of caption>...
 Best time to post: <day + time>
+File: vault/Pending_Approval/<filename>
 
 GEMINI IMAGE PROMPT (copy this):
 ─────────────────────────────────
@@ -135,10 +149,8 @@ GEMINI IMAGE PROMPT (copy this):
 ─────────────────────────────────
 
 NEXT STEPS:
-1. Go to https://gemini.google.com or any AI image generator
-2. Paste the prompt above
-3. Download the generated image
-4. Save it as: vault/Images/<filename>
-5. Move vault/Pending_Approval/<md-file> to vault/Approved/
-6. LinkedIn post will fire automatically!
+1. Go to: https://gemini.google.com
+2. Paste the prompt → Generate → Download
+3. Save image to: vault/Images/<filename>
+4. Move .md file to vault/Approved/ → Done!
 ```
