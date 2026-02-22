@@ -1,0 +1,20 @@
+# Credentials - NEVER commit
+.env
+*.token
+*.json.bak
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# Logs (optional - you may want to commit these)
+vault/Logs/
+
+# OS
+.DS_Store
+Thumbs.db
