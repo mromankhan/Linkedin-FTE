@@ -31,7 +31,7 @@ DASHBOARD_FILE = VAULT_PATH / "Dashboard.md"
 def parse_post_file(filepath: Path) -> dict:
     """
     Parse a markdown post file with YAML frontmatter.
-    Returns dict with keys: topic, content, hashtags, scheduled_time
+    Returns dict with keys: type, topic, content, hashtags, pdf_path, image_path
     """
     text = filepath.read_text(encoding="utf-8")
 
@@ -44,8 +44,14 @@ def parse_post_file(filepath: Path) -> dict:
                 key, _, val = line.partition(":")
                 frontmatter[key.strip()] = val.strip()
 
-    # Extract content (everything after frontmatter and the ## Post Content header)
-    content_match = re.search(r"## Post Content\n\n(.*?)(?=\n## |\Z)", text, re.DOTALL)
+    # Post type: text | image | carousel
+    post_type = frontmatter.get("type", "text")
+
+    # Extract caption/content
+    # For carousels it's under "## Post Caption", for others "## Post Content"
+    content_match = re.search(
+        r"## Post (?:Content|Caption)\n\n(.*?)(?=\n## |\Z)", text, re.DOTALL
+    )
     content = content_match.group(1).strip() if content_match else ""
 
     # Extract hashtags from frontmatter or from post
@@ -53,10 +59,12 @@ def parse_post_file(filepath: Path) -> dict:
     hashtags = [h.strip().lstrip("#") for h in raw_hashtags.split(",") if h.strip()]
 
     return {
+        "type": post_type,
         "topic": frontmatter.get("topic", "Unknown"),
         "content": content,
         "hashtags": hashtags,
-        "scheduled_time": frontmatter.get("scheduled_time", ""),
+        "pdf_path": frontmatter.get("pdf_path", ""),
+        "image_path": frontmatter.get("image_path", ""),
         "best_time": frontmatter.get("best_time", ""),
     }
 
@@ -94,30 +102,69 @@ class ApprovalHandler(FileSystemEventHandler):
         self._process_post(filepath)
 
     def _process_post(self, filepath: Path) -> None:
-        # Import here to avoid circular issues
-        from linkedin_poster import post_to_linkedin
+        from linkedin_poster import (
+            post_to_linkedin,
+            post_image_to_linkedin,
+            post_carousel_to_linkedin,
+        )
 
         try:
             parsed = parse_post_file(filepath)
+            post_type = parsed.get("type", "text")
 
             if not parsed["content"]:
                 logger.warning(f"[Watcher] No content found in {filepath.name}, skipping.")
                 return
 
-            result = post_to_linkedin(
-                content=parsed["content"],
-                hashtags=parsed["hashtags"],
-                source_file=filepath.name,
-            )
+            # Route to correct poster based on type
+            if post_type == "image":
+                image_path = parsed["image_path"]
+                if not image_path or not Path(image_path).exists():
+                    logger.error(f"[Watcher] Image not found: {image_path}")
+                    update_dashboard(parsed["topic"], "❌ Image not found")
+                    return
+                result = post_image_to_linkedin(
+                    content=parsed["content"],
+                    hashtags=parsed["hashtags"],
+                    image_path=image_path,
+                    image_title=parsed["topic"],
+                    source_file=filepath.name,
+                )
+
+            elif post_type == "carousel":
+                pdf_path = parsed["pdf_path"]
+                if not pdf_path or not Path(pdf_path).exists():
+                    logger.error(f"[Watcher] PDF not found: {pdf_path}")
+                    update_dashboard(parsed["topic"], "❌ PDF not found")
+                    return
+                result = post_carousel_to_linkedin(
+                    content=parsed["content"],
+                    hashtags=parsed["hashtags"],
+                    pdf_path=pdf_path,
+                    carousel_title=parsed["topic"],
+                    source_file=filepath.name,
+                )
+                # Move PDF to Published too
+                if result["success"]:
+                    pdf_src = Path(pdf_path)
+                    if pdf_src.exists():
+                        shutil.move(str(pdf_src), str(PUBLISHED_DIR / pdf_src.name))
+
+            else:
+                result = post_to_linkedin(
+                    content=parsed["content"],
+                    hashtags=parsed["hashtags"],
+                    source_file=filepath.name,
+                )
+
+            type_label = {"image": "🖼️ Image", "carousel": "📊 Carousel"}.get(post_type, "📝 Text")
 
             if result["success"]:
-                # Move to Published
                 dest = PUBLISHED_DIR / filepath.name
                 shutil.move(str(filepath), str(dest))
                 logger.info(f"[Watcher] Moved to Published: {filepath.name}")
-                update_dashboard(parsed["topic"], "✅ Published", result["post_urn"])
+                update_dashboard(parsed["topic"], f"✅ {type_label} Published", result["post_urn"])
             else:
-                # Move to Needs_Action with error note
                 error_note = NEEDS_ACTION_DIR / f"ERROR_{filepath.name}"
                 filepath.rename(error_note)
                 error_note.write_text(
