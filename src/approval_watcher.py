@@ -50,7 +50,7 @@ def parse_post_file(filepath: Path) -> dict:
     # Extract caption/content
     # For carousels it's under "## Post Caption", for others "## Post Content"
     content_match = re.search(
-        r"## Post (?:Content|Caption)\n\n(.*?)(?=\n## |\Z)", text, re.DOTALL
+        r"## Post (?:Content|Caption)[^\n]*\n\n(.*?)(?=\n## |\Z)", text, re.DOTALL
     )
     content = content_match.group(1).strip() if content_match else ""
 
@@ -119,36 +119,37 @@ class ApprovalHandler(FileSystemEventHandler):
             # Route to correct poster based on type
             if post_type == "image":
                 image_path = parsed["image_path"]
-                if not image_path or not Path(image_path).exists():
+                resolved_image = Path(image_path) if Path(image_path).is_absolute() else VAULT_PATH.parent / image_path
+                if not image_path or not resolved_image.exists():
                     logger.error(f"[Watcher] Image not found: {image_path}")
                     update_dashboard(parsed["topic"], "❌ Image not found")
                     return
                 result = post_image_to_linkedin(
                     content=parsed["content"],
                     hashtags=parsed["hashtags"],
-                    image_path=image_path,
+                    image_path=str(resolved_image),
                     image_title=parsed["topic"],
                     source_file=filepath.name,
                 )
 
             elif post_type == "carousel":
                 pdf_path = parsed["pdf_path"]
-                if not pdf_path or not Path(pdf_path).exists():
+                resolved_pdf = Path(pdf_path) if Path(pdf_path).is_absolute() else VAULT_PATH.parent / pdf_path
+                if not pdf_path or not resolved_pdf.exists():
                     logger.error(f"[Watcher] PDF not found: {pdf_path}")
                     update_dashboard(parsed["topic"], "❌ PDF not found")
                     return
                 result = post_carousel_to_linkedin(
                     content=parsed["content"],
                     hashtags=parsed["hashtags"],
-                    pdf_path=pdf_path,
+                    pdf_path=str(resolved_pdf),
                     carousel_title=parsed["topic"],
                     source_file=filepath.name,
                 )
                 # Move PDF to Published too
                 if result["success"]:
-                    pdf_src = Path(pdf_path)
-                    if pdf_src.exists():
-                        shutil.move(str(pdf_src), str(PUBLISHED_DIR / pdf_src.name))
+                    if resolved_pdf.exists():
+                        shutil.move(str(resolved_pdf), str(PUBLISHED_DIR / resolved_pdf.name))
 
             else:
                 result = post_to_linkedin(
